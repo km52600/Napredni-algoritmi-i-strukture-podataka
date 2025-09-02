@@ -1,0 +1,56 @@
+from collections import namedtuple
+from typing import List
+
+
+def create_table(N: int, M: int) -> List[List[int]]:
+    """
+    Creates a table (list of lists) with M columns and N rows, filled with 0.
+    The table is of dimension (N+1)x(M+1).
+
+    Args:
+        N (int): The number of rows (+1) in the table. The index of the last row.
+        M (int): The number of columns (+1) in the table. The index of the last column.
+    """
+    return [[0] * (M + 1) for _ in range(N + 1)]
+
+
+InvestmentOption = namedtuple(
+    "InvestmentOption", ["required_investment", "potential_profit"]
+)
+"""
+A tuple class representing a single investment option.
+
+Attributes:
+    required_investment: int
+        The required amount you need to invest to get the potential profit.
+    potential_profit: int
+        The potential amount you can earn by investing.
+"""
+
+def optimize_investment(
+    options: List[InvestmentOption],
+    max_budget: int
+) -> List[List[int]]:
+    """
+    Calculates the table of best profits for the given maximal budget.
+
+    Args:
+        options (List[InvestmentOption]): List of InvestmentOption objects representing different options.
+        max_budget (int): The maximum amount of money to invest.
+
+    """
+    # TODO: Create the table with the appropriate dimensions. Replace the '<N_rows>' and '<M_columns' arguments.
+    table = create_table(len(options), (int) (max_budget / 1000))
+
+    # TODO: Iterate through the options in O(n*m) and calculate the optimal profits.
+    for i in range(len(options)+1):
+        for j in range((int) (max_budget/1000)+1):
+            if j==0:
+                table[i][j]=0
+            elif i==0:
+                table[i][j]=0
+            elif j>= (int)(options[i-1].required_investment/1000):
+                table[i][j] =max(table[i-1][j] ,  table[i-1][j-((int)(options[i-1].required_investment/1000))] +options[i-1].potential_profit)
+            else :
+                table[i][j]= table[i-1][j]
+    return table
